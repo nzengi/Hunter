@@ -1,0 +1,65 @@
+modules = ["python-3.11"]
+
+[nix]
+channel = "stable-24_05"
+packages = ["libtool", "pkg-config"]
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "BitcoinKeyFinder"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "bitcoin_finder"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "bitcoin_cpu_finder"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "bitcoin_random_search"
+
+[[workflows.workflow]]
+name = "BitcoinKeyFinder"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pip install pycuda numpy coincurve base58 && python bitcoin_puzzle_solver.py"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "bitcoin_finder"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pip install pycuda numpy coincurve base58 && python bitcoin_puzzle_solver.py"
+
+[[workflows.workflow]]
+name = "bitcoin_cpu_finder"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pip install numpy coincurve base58 && python optimized_bitcoin_finder.py"
+
+[[workflows.workflow]]
+name = "bitcoin_random_search"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python simple_bitcoin_finder.py"
+
+[deployment]
+run = ["sh", "-c", "pip install pycuda numpy coincurve base58 && python bitcoin_puzzle_solver.py"]
